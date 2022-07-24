@@ -8,6 +8,7 @@ import android.widget.Button
 import androidx.room.Database
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.*
@@ -29,16 +30,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var data_base: DatabaseReference   //variable for firebase
     private val data_key : String = "USER'S_PATH"   //key for firebase
     private var mapObjectTapListener: MapObjectTapListener =
+            MapObjectTapListener { mapObject, point ->
+                val mark = mapObject as PlacemarkMapObject
+                var ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
+                mapView.map.move(
+                    CameraPosition(ppoint, 16.0f, 0.0f, 0.0f),
+                    Animation(Animation.Type.SMOOTH, 2f), null
+                )
+                return@MapObjectTapListener true
+            }
+    /*
+    private var mapButtonTapListener: MapObjectTapListener =
         MapObjectTapListener { mapObject, point ->
-            val mark = mapObject as PlacemarkMapObject
-            var ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
-            mapView.map.move(
-                CameraPosition(ppoint, 16.0f, 0.0f, 0.0f),
-                Animation(Animation.Type.SMOOTH, 2f), null
-            )
+            //val mark = mapObject as PlacemarkMapObject
+            //var ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
+            //mapView.map.move(
+            //    CameraPosition(ppoint, 16.0f, 0.0f, 0.0f),
+            //    Animation(Animation.Type.SMOOTH, 2f), null
+            //)
             return@MapObjectTapListener true
         }
-
+    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey("f727989a-ecd4-4f05-a90d-f923d9179f62")
@@ -76,16 +88,22 @@ class MainActivity : AppCompatActivity() {
         button_save.setOnClickListener{ onClickSave_path(mapView)}
 
 
+
     }
 
     fun onClickSave_path(view: View) {
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
-        val tmp_point : Point = Point(53.327300, 50.316413)
-        val tmp_point2: Point = Point(53.327300, 50.416413)
-        Current_Path.add(tmp_point)
-        Current_Path.add(tmp_point2)
-        val id : String = data_base.getKey().toString()
-        data_base.push().setValue(id, Current_Path)
+        //val tmp_point : Point = Point(53.327300, 50.316413)
+        //val tmp_point2: Point = Point(53.327300, 50.416413)
+        //Current_Path.add(tmp_point)
+        //Current_Path.add(tmp_point2)
+        //println(Current_Path.size)
+        //val database = Firebase.database
+        //val myRef = database.getReference("button")
+        //myRef.setValue("test button!")
+        val id : String = data_base.key.toString()
+        val tmp : Path = Path(id.toString(),53.327300.toString(), 50.316413.toString() )
+        data_base.push().setValue(tmp)
     }
 
     private fun make_new_marker() {
@@ -120,6 +138,18 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+class Path{
+    public var id: String
+    public var x: String
+    public var y: String
+
+    constructor(id: String, x: String, y: String) {
+        this.id = id
+        this.x = x
+        this.y = y
+    }
+}
+
 
 
 
