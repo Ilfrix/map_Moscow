@@ -1,14 +1,18 @@
 package com.example.maps
 
 
+import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ListView
+import android.widget.Toast
 import androidx.room.Database
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.*
@@ -24,33 +28,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var button_save: Button
     private lateinit var placeMark1: PlacemarkMapObject
     private lateinit var placeMark2: PlacemarkMapObject
-    private lateinit var placeMark3: PlacemarkMapObject
+    //private lateinit var placeMark3: PlacemarkMapObject
     private lateinit var bufMark: PlacemarkMapObject
-    private lateinit var Current_Path : ArrayList<Point> //current path
+    private val Current_Path : ArrayList<Path> = ArrayList() //current path
     private lateinit var data_base: DatabaseReference   //variable for firebase
     private val data_key : String = "USER'S_PATH"   //key for firebase
     private var mapObjectTapListener: MapObjectTapListener =
             MapObjectTapListener { mapObject, point ->
                 val mark = mapObject as PlacemarkMapObject
-                var ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
+                val ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
                 mapView.map.move(
                     CameraPosition(ppoint, 16.0f, 0.0f, 0.0f),
                     Animation(Animation.Type.SMOOTH, 2f), null
                 )
                 return@MapObjectTapListener true
             }
-    /*
-    private var mapButtonTapListener: MapObjectTapListener =
-        MapObjectTapListener { mapObject, point ->
-            //val mark = mapObject as PlacemarkMapObject
-            //var ppoint: Point = Point(mark.geometry.latitude, mark.geometry.longitude)
-            //mapView.map.move(
-            //    CameraPosition(ppoint, 16.0f, 0.0f, 0.0f),
-            //    Animation(Animation.Type.SMOOTH, 2f), null
-            //)
-            return@MapObjectTapListener true
-        }
-    */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey("f727989a-ecd4-4f05-a90d-f923d9179f62")
@@ -93,17 +85,41 @@ class MainActivity : AppCompatActivity() {
 
     fun onClickSave_path(view: View) {
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
-        //val tmp_point : Point = Point(53.327300, 50.316413)
-        //val tmp_point2: Point = Point(53.327300, 50.416413)
-        //Current_Path.add(tmp_point)
-        //Current_Path.add(tmp_point2)
-        //println(Current_Path.size)
+
+        val name_path = "THE TEST WAYы"
+        var listData : ArrayList<Path> = ArrayList()
+        val tmp_point : Path = Path(name_path, 53.327300.toString(), 50.316413.toString())
+        //val id2 : String = data_base.key.toString()
+        val tmp_point2: Path = Path(name_path, 53.327300.toString(), 50.416413.toString())
+        Current_Path.clear()
+        Current_Path.add(tmp_point)
+        Current_Path.add(tmp_point2)
+
+        val database = Firebase.database
+        val myRef = database.getReference(name_path)
+        myRef.setValue(Current_Path)
+        //val name_path = "THE BEST WAY"
         //val database = Firebase.database
-        //val myRef = database.getReference("button")
-        //myRef.setValue("test button!")
-        val id : String = data_base.key.toString()
-        val tmp : Path = Path(id.toString(),53.327300.toString(), 50.316413.toString() )
-        data_base.push().setValue(tmp)
+        //val myRef = database.getReference(name_path)
+        myRef.addValueEventListener(object: ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value = snapshot.getValue<Path?>()
+                //Log.d(TAG, "Value is: " + value)
+                if (value != null)
+                    listData.add(value)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.w(TAG, "Failed to read value.", error.toException())
+            }
+
+        })
+
+        //data_base.push().setValue(Current_Path)
+        Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
     }
 
     private fun make_new_marker() {
@@ -139,15 +155,51 @@ class MainActivity : AppCompatActivity() {
 
 }
 class Path{
-    public var id: String
-    public var x: String
-    public var y: String
+    public var path_name: String
+    public var koordination_x: String
+    public var koordination_y: String
 
     constructor(id: String, x: String, y: String) {
-        this.id = id
-        this.x = x
-        this.y = y
+        this.path_name = id
+        this.koordination_x = x
+        this.koordination_y = y
     }
+}
+
+class ReadActivity(){
+    //private lateinit var lastview: ListView
+    lateinit var DataBase: DatabaseReference
+    var listData : ArrayList<Path> = ArrayList()
+    //private lateinit var listDate: List<String>
+
+    /*
+    //constructor(){
+    fun getDataFromDB()
+    {
+        DataBase = FirebaseDatabase.getInstance().getReference("THE BEST WAY")
+        var vListener: ValueEventListener = ValueEventListener(){
+            //fun onDataChange(datasnapshot : DataSnapshot?) {
+                var datasnapshot : DataSnapshot?
+                var Ds : DataSnapshot
+                for (Ds in datasnapshot){
+                    var path : Path = Ds.getValue(Path.class)
+                    listData.add(Path.path_name)
+
+                }
+            }
+            fun onCancelled(databaseError : DatabaseError?) {
+
+            }
+        DataBase.addValueEventListener(vListener)
+        }
+    */
+
+
+    //}
+
+
+
+
 }
 
 
