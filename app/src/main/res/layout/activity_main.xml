@@ -18,6 +18,21 @@
     <com.yandex.mapkit.mapview.MapView
         android:id="@+id/mapview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/mapview"
+        app:layout_anchorGravity="center">
+
+
+        <Button
+            android:id="@+id/save_path"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="128dp"
+            android:onClick="onClickSave_path"
+            android:text="Save"
+            tools:layout_editor_absoluteX="100dp"
+            tools:layout_editor_absoluteY="150dp" />
+    </com.yandex.mapkit.mapview.MapView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -42,6 +43,8 @@ dependencies {
     // Облегченная библиотека, содержит только карту, слой пробок,
     // LocationManager, UserLocationLayer и возможность скачивать офлайн-карты (только в платной версии).
     implementation 'com.yandex.android:maps.mobile:4.1.0-lite'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.5'
+    implementation 'androidx.room:room-common:2.3.0'
 
     // Полная библиотека в дополнение к lite версии предоставляет автомобильную маршрутизацию,
     // веломаршрутизацию, пешеходную маршрутизацию и маршрутизацию на общественном транспорте,
