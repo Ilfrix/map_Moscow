@@ -87,19 +87,72 @@ class MainActivity : AppCompatActivity() {
 
         val name_path = "WAY"
         var listData : ArrayList<Path> = ArrayList()
-        val tmp_point : Path = Path(name_path, 50.327301.toString(), 51.316413.toString())
+        val tmp_point : Path = Path(name_path, 60.327301.toString(), 51.316413.toString())
         //val id2 : String = data_base.key.toString()
-        val tmp_point2: Path = Path(name_path, 55.327305.toString(), 51.416413.toString())
+        val tmp_point2: Path = Path(name_path, 65.327305.toString(), 51.416413.toString())
         Current_Path.clear()
         Current_Path.add(tmp_point)
         Current_Path.add(tmp_point2)
 
+        //data_base.push().setValue(Current_Path)
+
+        val vListener = object : ValueEventListener {
+            override  fun onDataChange(snapshot: DataSnapshot){
+                for (snapshot in snapshot.children){
+                    print(snapshot)
+                    val tmp = snapshot.value
+                    val len = tmp.toString().length
+                    var k : String = tmp.toString().slice(1..len-2)
+                    val arr = k.split(",").toMutableList()
+                    var cur_index = 0
+                    var v = 0
+                    var new_path : ArrayList<Path> = ArrayList()
+                    for (c in arr){
+                        if (cur_index == 0)
+                            arr[cur_index + v] = arr[cur_index + v].replace("{x=","")
+                        else if(cur_index == 1)
+                            arr[cur_index + v] = arr[cur_index + v].replace(" y=","")
+                        else if(cur_index == 2) {
+                            arr[cur_index + v] = arr[cur_index + v].replace(" path_name=", "")
+                            arr[cur_index + v] = arr[cur_index + v].replace("}", "")
+                        }
+
+                        cur_index++
+                        if (cur_index == 3) {
+                            cur_index = 0
+                            v += 3
+                            val p: Path = Path(arr[v-3], arr[v-2], arr[v - 1])
+                            new_path.add(p)
+                        }
+                    }
+
+                    //убрать первый и последний сисвол после замены
+                    //разбить строку по запятой
+                    //сделать массив
+                    //разбить по запятым
+                    val exit_point = "abs"
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                val t = "pass"
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            }
+        }
+        Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
+        data_base.addValueEventListener(vListener)
+        /*
         val database = Firebase.database
         val myRef = database.getReference(name_path) //name of path, don't write more one!
         //myRef.setValue(Current_Path)
 
         val postListener = object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
+            override fun onDataChange(snapchat: DataSnapshot) {
+                for (snapchat1 in  snapchat.children) {
+                    print(snapchat)
+                }
+                }
+                /*
                 val post = dataSnapshot.getValue<ArrayList<HashMap<String, String>>>()
                 if (post != null) {
                     for (tmp in post) {
@@ -109,7 +162,8 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-            }
+                */
+
 
             override fun onCancelled(databaseError: DatabaseError) {
                 // Getting Post failed, log a message
@@ -120,7 +174,7 @@ class MainActivity : AppCompatActivity() {
         }
         Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
         myRef.addValueEventListener(postListener)
-
+    */
 
     }
 
