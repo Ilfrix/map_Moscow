@@ -86,40 +86,39 @@ class MainActivity : AppCompatActivity() {
     fun onClickSave_path(view: View) {
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
 
-        val name_path = "THE TEST WAYы"
+        val name_path = "THE TEST WAY"
         var listData : ArrayList<Path> = ArrayList()
         val tmp_point : Path = Path(name_path, 53.327300.toString(), 50.316413.toString())
         //val id2 : String = data_base.key.toString()
         val tmp_point2: Path = Path(name_path, 53.327300.toString(), 50.416413.toString())
-        Current_Path.clear()
-        Current_Path.add(tmp_point)
-        Current_Path.add(tmp_point2)
+        //Current_Path.clear()
+        //Current_Path.add(tmp_point)
+        //Current_Path.add(tmp_point2)
 
         val database = Firebase.database
-        val myRef = database.getReference(name_path)
-        myRef.setValue(Current_Path)
-        //val name_path = "THE BEST WAY"
-        //val database = Firebase.database
-        //val myRef = database.getReference(name_path)
-        myRef.addValueEventListener(object: ValueEventListener {
+        val myRef = database.getReference(name_path) //name of path, don't write more one!
+        myRef.setValue(tmp_point)
 
-            override fun onDataChange(snapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value = snapshot.getValue<Path?>()
-                //Log.d(TAG, "Value is: " + value)
-                if (value != null)
-                    listData.add(value)
+        val postListener = object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val p : Path = Path()
+                val post = dataSnapshot.getValue<Path>()
+                //val mRef = database.getReference("testing")
+                //mRef.setValue(post?.path_name)
+
             }
 
-            override fun onCancelled(error: DatabaseError) {
-                Log.w(TAG, "Failed to read value.", error.toException())
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Getting Post failed, log a message
+                val t = "pass"
+                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
 
-        })
-
-        //data_base.push().setValue(Current_Path)
+        }
         Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
+        myRef.addValueEventListener(postListener)
+
+
     }
 
     private fun make_new_marker() {
@@ -156,13 +155,23 @@ class MainActivity : AppCompatActivity() {
 }
 class Path{
     public var path_name: String
-    public var koordination_x: String
-    public var koordination_y: String
+    public var x: String
+    public var y: String
 
     constructor(id: String, x: String, y: String) {
         this.path_name = id
-        this.koordination_x = x
-        this.koordination_y = y
+        this.x = x
+        this.y = y
+    }
+    constructor(p : Path){
+        this.path_name = p.path_name
+        this.x = p.x
+        this.y = p.y
+    }
+    constructor(){
+        this.path_name = "NOT FOUND"
+        this.x = "0"
+        this.y = "0"
     }
 }
 
