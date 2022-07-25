@@ -28,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var button_save: Button
     private lateinit var placeMark1: PlacemarkMapObject
     private lateinit var placeMark2: PlacemarkMapObject
-    //private lateinit var placeMark3: PlacemarkMapObject
     private lateinit var bufMark: PlacemarkMapObject
     private val Current_Path : ArrayList<Path> = ArrayList() //current path
     private lateinit var data_base: DatabaseReference   //variable for firebase
@@ -86,26 +85,28 @@ class MainActivity : AppCompatActivity() {
     fun onClickSave_path(view: View) {
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
 
-        val name_path = "Second WAY"
+        val name_path = "WAY"
         var listData : ArrayList<Path> = ArrayList()
-        val tmp_point : Path = Path(name_path, 54.327301.toString(), 50.316413.toString())
+        val tmp_point : Path = Path(name_path, 50.327301.toString(), 51.316413.toString())
         //val id2 : String = data_base.key.toString()
-        val tmp_point2: Path = Path(name_path, 53.327305.toString(), 50.416413.toString())
+        val tmp_point2: Path = Path(name_path, 55.327305.toString(), 51.416413.toString())
         Current_Path.clear()
         Current_Path.add(tmp_point)
         Current_Path.add(tmp_point2)
 
         val database = Firebase.database
         val myRef = database.getReference(name_path) //name of path, don't write more one!
-        myRef.setValue(Current_Path)
+        //myRef.setValue(Current_Path)
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 val post = dataSnapshot.getValue<ArrayList<HashMap<String, String>>>()
-                for (tmp in post!!) {
-                    val v = tmp.values
-                    for (first in v) {
-                        println("Игрок: $first, счет: ")
+                if (post != null) {
+                    for (tmp in post) {
+                        val v = tmp.values
+                        for (first in v) {
+                            println("Игрок: $first, счет: ")
+                        }
                     }
                 }
             }
