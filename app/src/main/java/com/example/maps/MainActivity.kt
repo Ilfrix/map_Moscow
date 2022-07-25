@@ -86,26 +86,28 @@ class MainActivity : AppCompatActivity() {
     fun onClickSave_path(view: View) {
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
 
-        val name_path = "THE TEST WAY"
+        val name_path = "Second WAY"
         var listData : ArrayList<Path> = ArrayList()
-        val tmp_point : Path = Path(name_path, 53.327300.toString(), 50.316413.toString())
+        val tmp_point : Path = Path(name_path, 54.327301.toString(), 50.316413.toString())
         //val id2 : String = data_base.key.toString()
-        val tmp_point2: Path = Path(name_path, 53.327300.toString(), 50.416413.toString())
-        //Current_Path.clear()
-        //Current_Path.add(tmp_point)
-        //Current_Path.add(tmp_point2)
+        val tmp_point2: Path = Path(name_path, 53.327305.toString(), 50.416413.toString())
+        Current_Path.clear()
+        Current_Path.add(tmp_point)
+        Current_Path.add(tmp_point2)
 
         val database = Firebase.database
         val myRef = database.getReference(name_path) //name of path, don't write more one!
-        myRef.setValue(tmp_point)
+        myRef.setValue(Current_Path)
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val p : Path = Path()
-                val post = dataSnapshot.getValue<Path>()
-                //val mRef = database.getReference("testing")
-                //mRef.setValue(post?.path_name)
-
+                val post = dataSnapshot.getValue<ArrayList<HashMap<String, String>>>()
+                for (tmp in post!!) {
+                    val v = tmp.values
+                    for (first in v) {
+                        println("Игрок: $first, счет: ")
+                    }
+                }
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -153,6 +155,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+
+
 class Path{
     public var path_name: String
     public var x: String
@@ -173,6 +178,13 @@ class Path{
         this.x = "0"
         this.y = "0"
     }
+    /*
+    constructor(t : HashMap<String, String>){
+        this.path_name = t.values[0]
+        this.x = t.values[1]
+        this.y = t.values[2]
+    }
+     */
 }
 
 class ReadActivity(){
