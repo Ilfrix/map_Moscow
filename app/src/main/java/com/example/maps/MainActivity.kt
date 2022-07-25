@@ -88,7 +88,6 @@ class MainActivity : AppCompatActivity() {
         val name_path = "WAY"
         var listData : ArrayList<Path> = ArrayList()
         val tmp_point : Path = Path(name_path, 60.327301.toString(), 51.316413.toString())
-        //val id2 : String = data_base.key.toString()
         val tmp_point2: Path = Path(name_path, 65.327305.toString(), 51.416413.toString())
         Current_Path.clear()
         Current_Path.add(tmp_point)
@@ -126,55 +125,16 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    //убрать первый и последний сисвол после замены
-                    //разбить строку по запятой
-                    //сделать массив
-                    //разбить по запятым
-                    val exit_point = "abs"
                 }
             }
             override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
                 val t = "pass"
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
         Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
         data_base.addValueEventListener(vListener)
-        /*
-        val database = Firebase.database
-        val myRef = database.getReference(name_path) //name of path, don't write more one!
-        //myRef.setValue(Current_Path)
 
-        val postListener = object : ValueEventListener {
-            override fun onDataChange(snapchat: DataSnapshot) {
-                for (snapchat1 in  snapchat.children) {
-                    print(snapchat)
-                }
-                }
-                /*
-                val post = dataSnapshot.getValue<ArrayList<HashMap<String, String>>>()
-                if (post != null) {
-                    for (tmp in post) {
-                        val v = tmp.values
-                        for (first in v) {
-                            println("Игрок: $first, счет: ")
-                        }
-                    }
-                }
-                */
-
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                val t = "pass"
-                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-
-        }
-        Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
-        myRef.addValueEventListener(postListener)
-    */
 
     }
 
@@ -233,49 +193,6 @@ class Path{
         this.x = "0"
         this.y = "0"
     }
-    /*
-    constructor(t : HashMap<String, String>){
-        this.path_name = t.values[0]
-        this.x = t.values[1]
-        this.y = t.values[2]
-    }
-     */
-}
-
-class ReadActivity(){
-    //private lateinit var lastview: ListView
-    lateinit var DataBase: DatabaseReference
-    var listData : ArrayList<Path> = ArrayList()
-    //private lateinit var listDate: List<String>
-
-    /*
-    //constructor(){
-    fun getDataFromDB()
-    {
-        DataBase = FirebaseDatabase.getInstance().getReference("THE BEST WAY")
-        var vListener: ValueEventListener = ValueEventListener(){
-            //fun onDataChange(datasnapshot : DataSnapshot?) {
-                var datasnapshot : DataSnapshot?
-                var Ds : DataSnapshot
-                for (Ds in datasnapshot){
-                    var path : Path = Ds.getValue(Path.class)
-                    listData.add(Path.path_name)
-
-                }
-            }
-            fun onCancelled(databaseError : DatabaseError?) {
-
-            }
-        DataBase.addValueEventListener(vListener)
-        }
-    */
-
-
-    //}
-
-
-
-
 }
 
 
