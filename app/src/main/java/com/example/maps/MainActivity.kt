@@ -83,6 +83,17 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onClickSave_path(view: View) {
+
+
+
+        val p_user_id = "1"
+        var p : Pedometr = Pedometr(1.toString(), "26.07.2022", 10000.toLong(), 8.5)
+        var s : Pedometr?
+        //p.write()
+        s = p.load()
+        print(s)
+
+    /*
         data_base = FirebaseDatabase.getInstance().getReference(data_key)
 
         val name_path = "WAY"
@@ -132,9 +143,10 @@ class MainActivity : AppCompatActivity() {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
             }
         }
+
         Toast.makeText(this, "Успешно!", Toast.LENGTH_SHORT).show()
         data_base.addValueEventListener(vListener)
-
+*/
 
     }
 
@@ -174,9 +186,9 @@ class MainActivity : AppCompatActivity() {
 
 
 class Path{
-    public var path_name: String
-    public var x: String
-    public var y: String
+    var path_name: String
+    var x: String
+    var y: String
 
     constructor(id: String, x: String, y: String) {
         this.path_name = id
